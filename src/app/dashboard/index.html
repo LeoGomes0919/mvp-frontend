@@ -1,0 +1,86 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link rel="shortcut icon" href="/public/assets/images/favicon.ico" type="image/x-icon">
+  <link rel="stylesheet" href="/public/_cdn/css/reset.css">
+  <link rel="stylesheet" href="/public/_cdn/css/dashboard.css">
+  <link rel="stylesheet" href="/public/_cdn/css/components.css">
+  <script src="https://unpkg.com/@phosphor-icons/web"></script>
+  <title>Home</title>
+</head>
+
+<body>
+  <header class="container--header">
+    <div class="header__content">
+      <div class="header__content--logo">
+        <i class="ph-fill ph-chart-line"></i>
+        <h1 class="header__content__logo--title">.Money</h1>
+      </div>
+      <div class="header__options">
+        <button class="button button--md button--success" type="button">Novo registro</button>
+      </div>
+    </div>
+  </header>
+
+  <main class="container--main">
+    <section class="main__content--dashboard-info">
+      <div class="dashboard__info--cards">
+        <div class="dashboard__info__card">
+          <div class="info__card--header">
+            <span class="card__header--title">Entradas</span>
+            <i class="ph ph-arrow-circle-up card__header__title--icon-income"></i>
+          </div>
+          <div class="info__card--body">
+            <span class="card__body--value">R$ 12.000,00</span>
+          </div>
+        </div>
+
+        <div class="dashboard__info__card">
+          <div class="info__card--header">
+            <span class="card__header--title">Saídas</span>
+            <i class="ph ph-arrow-circle-down card__header__title--icon-outcome"></i>
+          </div>
+          <div class="info__card--body">
+            <span class="card__body--value">R$ 59,00</span>
+          </div>
+        </div>
+
+        <div class="dashboard__info__card">
+          <div class="info__card--header">
+            <span class="card__header--title">Balanço</span>
+            <i class="ph ph-currency-dollar card__header__title--icon-balance"></i>
+          </div>
+          <div class="info__card--body">
+            <span class="card__body--value">R$ 11.941,00</span>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <div class="main__content">
+      <section class="main__content--info-table">
+        <span class="info__table--title">Registros</span>
+        <span class="info__table--item-quantity">4 itens</span>
+      </section>
+
+      <section class="main__content--filter">
+        <input class="input input--success input--lg" type="text" placeholder="Busque por um registro">
+        <button class="button button--lg button--success--outline button--icon" type="button">
+          <i class="ph-bold ph-magnifying-glass"></i>
+          <span class="button__icon--text">Buscar</span>
+        </button>
+      </section>
+
+      <div class="main__content--table">
+        <table class="table__content"></table>
+      </div>
+    </div>
+  </main>
+  <script src="/public/_cdn/js/dashboard.js"></script>
+</body>
+
+
+</html>

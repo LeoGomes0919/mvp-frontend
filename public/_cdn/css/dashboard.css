@@ -1,0 +1,266 @@
+/* HEADER STYLES */
+
+.container--header {
+  background: var(--gray-900);
+}
+
+.header__content {
+  max-width: 1120px;
+  margin: 0 auto;
+  padding: 4rem 1rem 7.5rem 1rem;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.header__content--logo {
+  display: flex;
+  flex-direction: row;
+  flex-wrap: nowrap;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.header__content--logo>i {
+  font-size: 2.2rem;
+  color: var(--green-light);
+}
+
+.header__content__logo--title {
+  color: var(--white);
+  font-size: var(--fsz-lg);
+}
+
+/* MAIN STYLES */
+
+.container--main {
+  max-width: 1120px;
+  margin: 0 auto;
+  padding: 1rem;
+  position: relative;
+}
+
+/* MAIN CARDS STYLES */
+
+.main__content--dashboard-info {
+  display: flex;
+  flex-direction: row;
+  margin-bottom: 2.5rem;
+  position: absolute;
+  top: -5rem;
+  right: 1rem;
+  left: 1rem;
+}
+
+.dashboard__info--cards {
+  display: flex;
+  flex: 1;
+  flex-direction: row;
+  flex-wrap: nowrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: 2rem;
+}
+
+.dashboard__info__card {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  justify-content: center;
+  padding: 1.5rem 1.5rem 1.5rem 2rem;
+  border-radius: 0.375rem;
+  background: var(--gray-600);
+  flex: 1;
+}
+
+.dashboard__info__card:last-child {
+  background: var(--green-dark);
+}
+
+.info__card--header {
+  display: flex;
+  width: 100%;
+  flex-direction: row;
+  flex-wrap: nowrap;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 1.5rem;
+}
+
+.info__card--header i {
+  font-size: 2rem;
+}
+
+.card__header__title--icon-income {
+  color: var(--green-light);
+}
+
+.card__header__title--icon-outcome {
+  color: var(--red);
+}
+
+.card__header__title--icon-balance {
+  color: var(--white);
+}
+
+.card__header--title {
+  color: var(--gray-400);
+  font-size: var(--fsz-md);
+  font-weight: 400;
+}
+
+.info__card--body {
+  display: flex;
+  flex: 1;
+  flex-direction: row;
+  flex-wrap: nowrap;
+  align-items: center;
+}
+
+.card__body--value {
+  color: var(--white);
+  font-size: var(--fsz-xxlg);
+  font-weight: 700;
+}
+
+/* MAIN CONTENT STYLES */
+
+.main__content {
+  display: flex;
+  flex-direction: column;
+  margin-top: 7.5rem;
+}
+
+
+.main__content--info-table {
+  display: none;
+}
+
+.main__content--filter {
+  display: flex;
+  flex-direction: row;
+  flex-wrap: nowrap;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 2rem;
+  gap: 1rem;
+}
+
+/* MAIN CONTENT TABLE STYLES */
+
+.main__content--table {
+  display: flex;
+  flex: 1;
+  flex-direction: column;
+  align-items: center;
+}
+
+.table__content {
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+}
+
+.table__content tr {
+  display: flex;
+  flex-direction: row;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  padding: 1.25rem 2rem;
+  border-radius: 0.3125rem;
+  background: var(--gray-700);
+  margin-bottom: 0.5rem;
+}
+
+.table__content td:first-child {
+  flex: 2;
+}
+
+.table__content tr>td {
+  flex: 1;
+  font-size: var(--fsz-md);
+  color: var(--gray-400);
+  font-weight: 400;
+}
+
+.table__content tr>td:last-child {
+  text-align: end;
+}
+
+.table__content--icon {
+  display: none;
+}
+
+.table__content__value--value-income {
+  color: var(--green-light) !important;
+}
+
+.table__content__value--value-outcome {
+  color: var(--red) !important;
+}
+
+/* RESPONSIVE STYLES */
+
+@media screen and (max-width: 768px) {
+  .main__content--info-table {
+    display: flex;
+    flex-direction: row;
+    flex-wrap: nowrap;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 0.875rem;
+  }
+
+  .info__table--title {
+    font-size: 1.125rem;
+    color: var(--gray-400);
+    font-weight: 400;
+  }
+
+  .info__table--item-quantity {
+    font-size: var(--fsz-md);
+    color: var(--gray-500);
+    font-weight: 400;
+  }
+
+  .main__content--filter {
+    margin-bottom: 1rem;
+  }
+
+  .table__content tr {
+    flex-direction: column;
+    align-items: flex-start;
+    padding: 1.25rem;
+    gap: 1rem;
+    position: relative;
+    margin-bottom: 0.75rem;
+  }
+
+  .table__content td:last-child {
+    position: absolute;
+    bottom: 1.25rem;
+    right: 1.25rem;
+  }
+
+  .table__content--value {
+    font-size: var(--fsz-lg) !important;
+    font-weight: 700 !important;
+  }
+
+  .table__content--category,
+  .table__content--date {
+    color: var(--gray-500) !important;
+    display: flex;
+    align-items: center;
+    gap: 0.3125rem;
+  }
+
+  .table__content--icon {
+    display: inline;
+  }
+
+  .button__icon--text {
+    display: none;
+  }
+}
