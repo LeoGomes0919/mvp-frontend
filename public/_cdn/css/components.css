@@ -21,6 +21,11 @@
   padding: 0.75rem 1.5rem;
 }
 
+.button--sm {
+  font-size: var(--fsz-small);
+  padding: 0.5rem;
+}
+
 .button--lg {
   font-size: var(--fsz-md);
   padding: 0.875rem 2rem;
@@ -32,7 +37,19 @@
   border: 0 var(--green-dark);
 }
 
-.button--success:hover {
+.button--danger {
+  color: var(--white);
+  background: var(--red);
+  border: 0 var(--red);
+}
+
+.button--warning {
+  color: var(--white);
+  background: var(--yellow);
+  border: 0 var(--yellow);
+}
+
+.button:hover {
   filter: brightness(1.2);
 }
 
@@ -43,8 +60,32 @@
   transition: background-color 0.2s, color 0.2s;
 }
 
+.button--danger--outline {
+  color: var(--red-dark);
+  background: transparent;
+  border: 1px solid var(--red-dark);
+  transition: background-color 0.2s, color 0.2s;
+}
+
+.button--warning--outline {
+  color: var(--yellow-dark);
+  background: transparent;
+  border: 1px solid var(--yellow-dark);
+  transition: background-color 0.2s, color 0.2s;
+}
+
 .button--success--outline:hover {
   background-color: var(--green);
+  color: var(--white);
+}
+
+.button--danger--outline:hover {
+  background-color: var(--red);
+  color: var(--white);
+}
+
+.button--warning--outline:hover {
+  background-color: var(--yellow);
   color: var(--white);
 }
 
@@ -52,7 +93,6 @@
   .button--lg {
     padding: 0.75rem 1.5rem;
   }
-
 }
 
 /* INPUT STYLES */

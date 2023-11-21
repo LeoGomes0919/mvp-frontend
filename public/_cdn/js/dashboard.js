@@ -12,6 +12,27 @@ const data = [
     value: -59,
     category: 'Alimentação',
     date: '17/11/2023'
+  },
+  {
+    id: 3,
+    name: 'Trabalho Freelancer',
+    value: 5000,
+    category: 'Serviços',
+    date: '19/11/2023'
+  },
+  {
+    id: 4,
+    name: 'Jantar',
+    value: -230,
+    category: 'Alimentação',
+    date: '20/11/2023'
+  },
+  {
+    id: 5,
+    name: 'Viagem',
+    value: -2500,
+    category: 'Lazer',
+    date: '21/11/2023'
   }
 ];
 
@@ -34,7 +55,6 @@ const fillRows = (row, tr) => {
       switch (key) {
         case 'name':
           td.textContent = row[key];
-          td.setAttribute('data-id', row.id);
           break;
         case 'value':
           td.textContent = new Intl.NumberFormat('pt-BR', { style: 'currency', currency: 'BRL' }).format(row[key]);
@@ -60,10 +80,30 @@ const fillRows = (row, tr) => {
           td.textContent = row[key];
           break;
       }
+
       tr.appendChild(td);
     }
   }
+  const tdActions = document.createElement('td');
+  tdActions.classList.add('table__content--actions');
 
+  const deleteButton = document.createElement('button');
+  deleteButton.classList.add('button', 'button--sm', 'button--danger--outline', 'button--icon')
+  deleteButton.innerHTML = '<i class="ph ph-trash"></i>';
+  deleteButton.addEventListener('click', () => {
+    alert(`Deletar linha com ID: ${row.id}`);
+  });
+
+  const editButton = document.createElement('button');
+  editButton.classList.add('button', 'button--sm', 'button--warning--outline', 'button--icon')
+  editButton.innerHTML = '<i class="ph ph-pencil-line"></i>';
+  editButton.addEventListener('click', () => {
+    alert(`Editar linha com ID: ${row.id}`);
+  });
+
+  tdActions.appendChild(deleteButton);
+  tdActions.appendChild(editButton);
+  tr.appendChild(tdActions);
 }
 
 document.addEventListener('DOMContentLoaded', fillTable);

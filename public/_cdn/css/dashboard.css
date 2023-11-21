@@ -45,7 +45,6 @@
 .main__content--dashboard-info {
   display: flex;
   flex-direction: row;
-  margin-bottom: 2.5rem;
   position: absolute;
   top: -5rem;
   right: 1rem;
@@ -56,7 +55,6 @@
   display: flex;
   flex: 1;
   flex-direction: row;
-  flex-wrap: nowrap;
   align-items: center;
   justify-content: space-between;
   gap: 2rem;
@@ -184,8 +182,12 @@
   font-weight: 400;
 }
 
+.table__content tr>td:nth-child(4) {
+  text-align: center;
+}
+
 .table__content tr>td:last-child {
-  text-align: end;
+  justify-content: flex-end;
 }
 
 .table__content--icon {
@@ -200,9 +202,55 @@
   color: var(--red) !important;
 }
 
+.table__content--actions {
+  display: flex;
+  flex-direction: row;
+  flex-wrap: nowrap;
+  align-items: center;
+  gap: 0.5rem;
+}
+
 /* RESPONSIVE STYLES */
 
 @media screen and (max-width: 768px) {
+  *:active {
+    outline: none;
+    -webkit-tap-highlight-color: transparent;
+  }
+
+  .main__content {
+    margin-top: 3.5rem;
+  }
+
+  .dashboard__info--cards {
+    gap: .75rem;
+  }
+
+  .dashboard__info__card {
+    padding: 1rem;
+    transition: all 0.5s ease-in-out;
+  }
+
+  .info__card--header {
+    align-items: center;
+    justify-content: center;
+  }
+
+  .card__header--title {
+    display: none;
+  }
+
+  .info__card--body {
+    width: 100%;
+    align-items: center;
+    justify-content: center;
+    transition: all 0.5s ease-in-out;
+  }
+
+  .card__body--value {
+    font-size: var(--fsz-md);
+  }
+
   .main__content--info-table {
     display: flex;
     flex-direction: row;
