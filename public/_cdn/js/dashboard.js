@@ -106,4 +106,49 @@ const fillRows = (row, tr) => {
   tr.appendChild(tdActions);
 }
 
-document.addEventListener('DOMContentLoaded', fillTable);
+const fillRadioGroupCheck = () => {
+  const radios = document.querySelectorAll('input[name="type"]');
+  const containerRadio = document.querySelectorAll('.radio__buttons--item');
+
+  radios.forEach((radio) => {
+    radio.addEventListener('change', () => {
+      containerRadio.forEach((container) => {
+        const selectedRadio = container.querySelector('input');
+        if (selectedRadio.checked) {
+          console.log(selectedRadio.value)
+          container.classList.add('active');
+        } else {
+          container.classList.remove('active');
+        }
+      });
+    });
+  });
+}
+
+const modal = () => {
+  const btnOpenModal = document.getElementById('btn-open-modal');
+  const btnCloseModal = document.getElementById('btn-close-modal');
+  const modal = document.getElementById('modal');
+
+  btnOpenModal.addEventListener('click', () => {
+    modal.style.display = 'flex';
+    document.body.style.overflow = 'hidden';
+  });
+
+  btnCloseModal.addEventListener('click', () => {
+    modal.style.animation = 'modalFadeOut 0.3s ease-in';
+    document.body.style.overflow = 'auto';
+    setTimeout(() => {
+      modal.style.display = 'none';
+      modal.style.animation = '';
+    }, 300);
+  });
+}
+
+const initialize = () => {
+  fillTable();
+  fillRadioGroupCheck();
+  modal();
+}
+
+document.addEventListener('DOMContentLoaded', initialize);

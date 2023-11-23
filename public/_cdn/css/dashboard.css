@@ -262,6 +262,33 @@
   color: var(--green-light);
 }
 
+/* MAIN CONTENT MODAL FORM STYLES */
+
+.model__content__main--form {
+  display: flex;
+  flex: 1;
+  flex-direction: column;
+  row-gap: 1rem;
+  margin: 2.5rem 0;
+}
+
+.model__content__main__form--radio--buttons {
+  display: flex;
+  flex-direction: row;
+  flex-wrap: nowrap;
+  align-items: center;
+  justify-content: space-between;
+  column-gap: 1rem;
+}
+
+.radio__button--icon-income {
+  color: var(--green-light);
+}
+
+.radio__button--icon-outcome {
+  color: var(--red);
+}
+
 /* RESPONSIVE STYLES */
 
 @media screen and (max-width: 768px) {

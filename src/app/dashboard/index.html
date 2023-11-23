@@ -20,7 +20,9 @@
         <h1 class="header__content__logo--title">.Finance</h1>
       </div>
       <div class="header__options">
-        <button class="button button--md button--success" type="button">Novo registro</button>
+        <button class="button button--md button--success" type="button" id="btn-open-modal">
+          Novo registro
+        </button>
       </div>
     </div>
   </header>
@@ -86,6 +88,48 @@
           <span class="table__pagination--next">
             <i class="ph-bold ph-caret-right"></i>
           </span>
+        </div>
+      </div>
+
+      <div class="main__container--modal" id="modal">
+        <div class="modal--content modal--content--md">
+          <div class="modal__content--header">
+            <h2 class="modal__content__header--title">Novo registro</h2>
+            <i class="ph ph-x modal__content__header--icon" id="btn-close-modal"></i>
+          </div>
+
+          <div class="modal__content--main">
+            <form class="model__content__main--form">
+              <input class="input input--success input--lg" type="text" id="description" name="description"
+                placeholder="Descrição">
+
+              <input class="input input--success input--lg" type="number" id="value" name="value" placeholder="Preço">
+
+              <input class="input input--success input--lg" type="text" id="category" name="category"
+                placeholder="Categoria">
+
+              <div class="model__content__main__form--radio--buttons">
+                <div class="radio__buttons--item">
+                  <input class="radio--input radio--input--success" type="radio" id="income" name="type" value="income">
+                  <div class="radio__button--content">
+                    <i class="ph ph-arrow-circle-up radio__button--icon radio__button--icon-income"></i>
+                    <label class="radio__button--label" for="income">Entrada</label>
+                  </div>
+                </div>
+
+                <div class="radio__buttons--item">
+                  <input class="radio--input radio--input--danger" type="radio" id="outcome" name="type"
+                    value="outcome">
+                  <div class="radio__button--content">
+                    <i class="ph ph-arrow-circle-down radio__button--icon radio__button--icon-outcome"></i>
+                    <label class="radio__button--label" for="outcome">Saída</label>
+                  </div>
+                </div>
+              </div>
+            </form>
+
+            <button class="button button--xl button--success" type="button">Cadastrar</button>
+          </div>
         </div>
       </div>
     </div>
