@@ -5,51 +5,51 @@
   transition: filter 0.2s;
 }
 
-.button--icon {
+.button[btn-icon] {
   display: flex;
   align-items: center;
   justify-content: center;
   gap: 0.6rem;
 }
 
-.button--icon>i {
-  font-size: var(--fsz-lg);
+.button[btn-icon]>i {
+  font-size: var(--fsz-md);
 }
 
-.button--md {
+.button[size="md"] {
   font-size: var(--fsz-md);
   padding: 0.75rem 1.5rem;
 }
 
-.button--sm {
+.button[size="sm"] {
   font-size: var(--fsz-small);
-  padding: 0.5rem;
+  padding: 0.375rem;
 }
 
-.button--lg {
+.button[size="lg"] {
   font-size: var(--fsz-md);
   padding: 0.875rem 2rem;
 }
 
-.button--xl {
+.button[size="xl"] {
   font-size: var(--fsz-md);
   padding: 1rem 2rem;
   width: 100%;
 }
 
-.button--success {
+.button[success] {
   color: var(--white);
   background: var(--green);
-  border: 0 var(--green);
+  border: 1px solid var(--green);
 }
 
-.button--danger {
+.button[danger] {
   color: var(--white);
   background: var(--red);
   border: 0 var(--red);
 }
 
-.button--warning {
+.button[warning] {
   color: var(--white);
   background: var(--yellow);
   border: 0 var(--yellow);
@@ -59,40 +59,55 @@
   filter: brightness(1.2);
 }
 
-.button--success--outline {
+.button[success-outline] {
   color: var(--green-light);
   background: transparent;
   border: 1px solid var(--green-light);
   transition: background-color 0.2s, color 0.2s;
 }
 
-.button--danger--outline {
+.button[danger-outline] {
   color: var(--red-dark);
   background: transparent;
   border: 1px solid var(--red-dark);
   transition: background-color 0.2s, color 0.2s;
 }
 
-.button--warning--outline {
+.button[warning-outline] {
   color: var(--yellow-dark);
   background: transparent;
   border: 1px solid var(--yellow-dark);
   transition: background-color 0.2s, color 0.2s;
 }
 
-.button--success--outline:hover {
+.button[success-outline]:hover {
   background-color: var(--green);
   color: var(--white);
 }
 
-.button--danger--outline:hover {
+.button[danger-outline]:hover {
   background-color: var(--red);
   color: var(--white);
 }
 
-.button--warning--outline:hover {
+.button[warning-outline]:hover {
   background-color: var(--yellow);
   color: var(--white);
+}
+
+.button[data-tooltip]:hover:after {
+  content: attr(data-tooltip);
+  position: absolute;
+  top: 100%;
+  left: 50%;
+  margin-top: 0.25rem;
+  transform: translateX(-50%);
+  background-color: rgba(0, 0, 0, 0.5);
+  color: var(--white);
+  padding: 0.5rem;
+  border-radius: 0.375rem;
+  font-size: var(--fsz-small);
+  font-weight: 400;
 }
 
 /* INPUT STYLES */

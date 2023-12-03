@@ -273,12 +273,18 @@
 }
 
 .model__content__main__form--radio--buttons {
+  position: relative;
   display: flex;
   flex-direction: row;
-  flex-wrap: nowrap;
+  flex-wrap: wrap;
   align-items: center;
   justify-content: space-between;
   column-gap: 1rem;
+}
+
+.model__content__main__form--radio--buttons .error--message {
+  position: absolute;
+  bottom: -1.2rem;
 }
 
 .radio__button--icon-income {

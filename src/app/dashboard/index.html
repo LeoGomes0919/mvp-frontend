@@ -20,7 +20,7 @@
         <h1 class="header__content__logo--title">.Finance</h1>
       </div>
       <div class="header__options">
-        <button class="button button--md button--success" type="button" id="btn-open-modal">
+        <button class="button" success size="md" type="button" id="btn-open-modal">
           Novo registro
         </button>
       </div>
@@ -70,7 +70,7 @@
 
       <section class="main__content--filter">
         <input class="input input--success input--lg" type="text" placeholder="Busque por um registro">
-        <button class="button button--lg button--success--outline button--icon" type="button">
+        <button class="button" size="lg" success-outline btn-icon type="button">
           <i class="ph-bold ph-magnifying-glass"></i>
           <span class="button__icon--text">Buscar</span>
         </button>
@@ -100,16 +100,23 @@
 
           <div class="modal__content--main">
             <form class="model__content__main--form">
-              <input class="input input--success input--lg" type="text" id="description" name="description"
-                placeholder="Descrição">
+              <div class="model__content__main__form-group">
+                <input class="input input--success input--lg" type="text" id="description" name="description"
+                  placeholder="Descrição">
+              </div>
 
-              <input class="input input--success input--lg" type="number" id="value" name="value" placeholder="Preço">
+              <div class="model__content__main__form-group">
+                <input class="input input--success input--lg" type="number" id="value" name="value" placeholder="Preço"
+                  step="0.01">
+              </div>
 
-              <input class="input input--success input--lg" type="text" id="category" name="category"
-                placeholder="Categoria">
+              <div class="model__content__main__form-group">
+                <input class="input input--success input--lg" type="text" id="category" name="category"
+                  placeholder="Categoria">
+              </div>
 
-              <div class="model__content__main__form--radio--buttons">
-                <div class="radio__buttons--item">
+              <div class="model__content__main__form--radio--buttons model__content__main__form-group">
+                <div class="radio__buttons--item" data-value="income">
                   <input class="radio--input radio--input--success" type="radio" id="income" name="type" value="income">
                   <div class="radio__button--content">
                     <i class="ph ph-arrow-circle-up radio__button--icon radio__button--icon-income"></i>
@@ -117,7 +124,7 @@
                   </div>
                 </div>
 
-                <div class="radio__buttons--item">
+                <div class="radio__buttons--item" data-value="outcome">
                   <input class="radio--input radio--input--danger" type="radio" id="outcome" name="type"
                     value="outcome">
                   <div class="radio__button--content">
@@ -128,7 +135,9 @@
               </div>
             </form>
 
-            <button class="button button--xl button--success" type="button">Cadastrar</button>
+            <button class="button" success size="xl" type="button" id="submit-form">
+              Cadastrar
+            </button>
           </div>
         </div>
       </div>
