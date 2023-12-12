@@ -1,3 +1,89 @@
+// ACESSO AO BACKEND
+const token = localStorage.getItem('token') ?? null
+const baseUrl = 'http://127.0.0.1:5000';
+const headers = {
+  'Content-Type': 'application/json',
+  'Authorization': `Bearer ${token}`,
+  'Access-Control-Allow-Origin': '*',
+}
+
+let pagination = {
+  page: 1,
+  limit: 10
+}
+
+const getFinances = async () => {
+  const response = await fetch(`${baseUrl}/finances/filters`, {
+    method: 'GET',
+    headers
+  });
+
+  const data = await response.json();
+  console.log("🚀 ~ file: dashboard.js:16 ~ getFinances ~ data:", data)
+
+  if (data?.status === 'success') {
+    const { items, pagination } = data?.data;
+    fillTable(items.map((item) => ({
+      id: item.id,
+      description: item.description,
+      value: item.value,
+      date: item.date,
+      category: item.category.name,
+      type: item.finance_type
+    })));
+  } else {
+    alert(data?.data);
+  }
+}
+
+const handleSubimitToBackend = async (data) => {
+  const response = await fetch(`${baseUrl}/finances/`, {
+    method: 'POST',
+    headers,
+    body: JSON.stringify(data),
+    mode: 'cors'
+  });
+
+  const responseData = await response.json();
+  if (responseData?.status === 'success') {
+    alert('Registro cadastrado com sucesso!');
+    window.location.reload();
+  }
+}
+
+const handleDelete = async (id) => {
+  const response = await fetch(`${baseUrl}/finances/${id}`, {
+    method: 'DELETE',
+    headers,
+    mode: 'cors'
+  });
+
+  const responseData = await response.json();
+  if (responseData?.status === 'success') {
+    alert('Registro deletado com sucesso!');
+    window.location.reload();
+  } else {
+    alert(responseData?.data);
+  }
+}
+
+const handleEdit = async (id, data) => {
+  const response = await fetch(`${baseUrl}/finances/${id}`, {
+    method: 'PUT',
+    headers,
+    body: JSON.stringify(data),
+    mode: 'cors'
+  });
+
+  const responseData = await response.json();
+  if (responseData?.status === 'success') {
+    alert('Registro editado com sucesso!');
+    window.location.reload();
+  } else {
+    alert(responseData?.data);
+  }
+}
+
 // TABLE FUNCTIONS
 const fillTable = (data) => {
   const table = document.querySelector('.table__content');
@@ -37,7 +123,15 @@ const fillRows = (row, tr) => {
           td.appendChild(document.createElement('i'));
           const iconDate = td.querySelector('i');
           iconDate.classList.add('ph', 'ph-calendar-blank', 'table__content--icon');
-          td.innerHTML = iconDate.outerHTML + row[key];
+          td.innerHTML = iconDate.outerHTML + Intl.DateTimeFormat('pt-BR', {
+            day: '2-digit',
+            month: '2-digit',
+            year: 'numeric',
+            hour: '2-digit',
+            minute: '2-digit',
+            hour12: false,
+            timeZone: 'America/Sao_Paulo'
+          }).format(new Date(row[key])).split(', ').join(' ');
           break;
         default:
           break;
@@ -84,8 +178,8 @@ const fillRows = (row, tr) => {
     }
   }
 
-  deleteButton.addEventListener('click', () => {
-    alert(`Deletar linha com ID: ${row.id}`);
+  deleteButton.addEventListener('click', async () => {
+    await handleDelete(row.id);
   });
 
   editButton.addEventListener('click', () => {
@@ -97,32 +191,25 @@ const fillRows = (row, tr) => {
   tr.appendChild(tdActions);
 }
 
-
-
 // MODAL FUNCTIONS
-const closeModal = (btn, modal) => {
-  btn.addEventListener('click', () => {
-    modal.style.animation = 'modalFadeOut 0.3s ease-in';
-    document.body.style.overflow = 'auto';
-    setTimeout(() => {
-      modal.style.display = 'none';
-      modal.style.animation = '';
-    }, 300);
-  });
+const modalContent = document.getElementById('modal');
+
+const btnOpenModal = document.getElementById('btn-open-modal');
+const openModal = () => {
+  modalContent.style.display = 'flex';
+  document.body.style.overflow = 'hidden';
 }
 
-const modal = () => {
-  const btnOpenModal = document.getElementById('btn-open-modal');
-  const btnCloseModal = document.getElementById('btn-close-modal');
-  const modal = document.getElementById('modal');
-
-  btnOpenModal.addEventListener('click', () => {
-    modal.style.display = 'flex';
-    document.body.style.overflow = 'hidden';
-  });
-
-  closeModal(btnCloseModal, modal);
-}
+btnOpenModal.addEventListener('click', () => openModal());
+const btnCloseModal = document.getElementById('btn-close-modal');
+btnCloseModal.addEventListener('click', () => {
+  modal.style.animation = 'modalFadeOut 0.3s ease-in';
+  document.body.style.overflow = 'auto';
+  setTimeout(() => {
+    modal.style.display = 'none';
+    modal.style.animation = '';
+  }, 300);
+});
 
 // FORM FUNCTIONS
 const fillRadioGroupCheck = () => {
@@ -196,19 +283,21 @@ const formValidation = () => {
   return hasError;
 }
 
-const submitForm = (event, form) => {
+const submitForm = async (event, form) => {
   const containerRadio = document.querySelectorAll('.radio__buttons--item');
   const data = new FormData(form);
   const dataObject = Object.fromEntries(data.entries());
 
   Object.assign(dataObject, {
     value: Number(dataObject.value),
-    date: new Date().toLocaleDateString('pt-BR').split('-').reverse().join('/'),
-    category: dataObject.category
-  })
-  console.log("🚀 ~ file: dashboard.js:241 ~ submitForm ~ dataObject:", dataObject)
+    category_id: dataObject.category,
+    finance_type: dataObject.type
+  });
+  delete dataObject.category;
+  delete dataObject.type;
 
-  fillTable([dataObject]);
+  await handleSubimitToBackend(dataObject);
+
   form.reset();
   event.preventDefault();
   containerRadio.forEach((container) => {
@@ -237,9 +326,12 @@ const isEmpty = (value) => {
 
 // INITIALIZE
 const initialize = () => {
+  if (!token) {
+    window.location.href = '../../../src/app/login.html';
+  }
   fillRadioGroupCheck();
-  modal();
   handleSubmit();
+  getFinances();
 }
 
 document.addEventListener('DOMContentLoaded', initialize);

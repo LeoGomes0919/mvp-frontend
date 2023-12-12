@@ -7,19 +7,29 @@ const passError = document.getElementById('pass-error');
 userError.innerText = '';
 passError.innerText = '';
 
-inputEmail.addEventListener('focus', () => {
-  inputEmail.classList.remove('input--error');
-  inputEmail.classList.remove('input--success');
-  userError.innerText = '';
-});
+// ACESSO AO BACKEND
+const login = async (email, password) => {
+  const response = await fetch('http://localhost:5000/auth/login', {
+    method: 'POST',
+    body: JSON.stringify({ email, password }),
+    headers: {
+      'Content-Type': 'application/json'
+    }
+  });
 
-inputPassword.addEventListener('focus', () => {
-  inputPassword.classList.remove('input--error');
-  inputPassword.classList.remove('input--success');
-  passError.innerText = '';
-});
+  const data = await response.json();
 
-button.addEventListener('click', () => {
+  if (data?.status === 'success' && data?.data?.access_token) {
+    if (typeof (Storage) !== "undefined") {
+      localStorage.setItem('token', data.data.access_token);
+    }
+    window.location.href = '../../../src/app/dashboard/index.html';
+  } else {
+    alert(data?.data);
+  }
+}
+
+button.addEventListener('click', async () => {
   if (isEmpty(inputEmail.value)) {
     inputEmail.classList.add('input--error');
     inputEmail.classList.remove('input--success');
@@ -37,6 +47,20 @@ button.addEventListener('click', () => {
     inputPassword.classList.add('input--success');
     inputPassword.classList.remove('input--error');
   }
+
+  await login(inputEmail.value, inputPassword.value)
+});
+
+inputEmail.addEventListener('focus', () => {
+  inputEmail.classList.remove('input--error');
+  inputEmail.classList.remove('input--success');
+  userError.innerText = '';
+});
+
+inputPassword.addEventListener('focus', () => {
+  inputPassword.classList.remove('input--error');
+  inputPassword.classList.remove('input--success');
+  passError.innerText = '';
 });
 
 const createErrorMessage = (message, targetElementId) => {
@@ -46,3 +70,6 @@ const createErrorMessage = (message, targetElementId) => {
 const isEmpty = (value) => {
   return !value || value === null || value === undefined || value === '';
 }
+
+
+
