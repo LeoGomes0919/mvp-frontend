@@ -23,6 +23,22 @@
         <button class="button" success size="md" type="button" id="btn-open-modal">
           Novo registro
         </button>
+
+        <div class="header__options-user--info">
+          <span class="header__options__user--name">
+            Olá, <span class="user--name">Usuário</span>
+            <i class="ph-bold ph-caret-down"></i>
+          </span>
+
+          <div class="header__options__user--dropdown">
+            <ul class="header__options__user__dropdown--list">
+              <li class="header__options__user__dropdown__list--item">
+                <i class="ph ph-sign-out"></i>
+                <span id="sign-out">Sair</span>
+              </li>
+            </ul>
+          </div>
+        </div>
       </div>
     </div>
   </header>
@@ -69,8 +85,9 @@
       </section>
 
       <section class="main__content--filter">
-        <input class="input input--success input--lg" type="text" placeholder="Busque por um registro">
-        <button class="button" size="lg" success-outline btn-icon type="button">
+        <input class="input input--success input--lg" type="text" id="input-search"
+          placeholder="Busque por descrição, tipo ENTRADAS ou SAIDAS">
+        <button class="button" size="lg" success-outline btn-icon type="button" id="submit-search">
           <i class="ph-bold ph-magnifying-glass"></i>
           <span class="button__icon--text">Buscar</span>
         </button>

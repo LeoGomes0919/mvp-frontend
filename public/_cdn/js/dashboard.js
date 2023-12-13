@@ -20,9 +20,44 @@ let balance = {
   total: 0
 }
 
+const getProfile = async () => {
+  const response = await fetch(`${baseUrl}/users/profile`, {
+    method: 'GET',
+    headers
+  });
+
+  const data = await response.json();
+
+  if (data?.status === 'success') {
+    const { name } = data?.data;
+    const profileName = document.querySelector('.user--name');
+
+    profileName.textContent = name.split(' ')[0];
+  } else {
+    alert(data?.data);
+  }
+}
+
 const getFinances = async () => {
-  const { page, per_page } = pagination;
-  const response = await fetch(`${baseUrl}/finances/filters?page=${page}&per_page=${per_page}`, {
+  const { page, per_page, description, finance_type } = pagination;
+
+  const query = {
+    page,
+    per_page
+  }
+
+  if (description) {
+    query.description = description;
+  }
+
+  if (finance_type) {
+    query.finance_type = finance_type;
+  }
+
+  const url = new URL(`${baseUrl}/finances/filters`);
+  url.search = new URLSearchParams(query).toString();
+
+  const response = await fetch(url, {
     method: 'GET',
     headers
   });
@@ -109,6 +144,30 @@ const handleEdit = async (id, data) => {
   } else {
     alert(responseData?.data);
   }
+}
+
+// DROPDOWN PROFILE
+const dropDownProfile = () => {
+  const signOut = document.getElementById('sign-out');
+  const dropdown = document.querySelector('.header__options__user--name');
+  const dropdownContent = document.querySelector('.header__options__user--dropdown');
+
+  dropdown.addEventListener('click', () => {
+    dropdownContent.classList.toggle('active');
+    if (dropdownContent.classList.contains('active')) {
+      dropdown.children[1].classList.remove('ph-caret-down');
+      dropdown.children[1].classList.add('ph-caret-up');
+    } else {
+      dropdown.children[1].classList.remove('ph-caret-up');
+      dropdown.children[1].classList.add('ph-caret-down');
+    }
+  });
+
+  signOut.addEventListener('click', () => {
+    localStorage.removeItem('token');
+    window.location.reload();
+  });
+
 }
 
 // TABLE FUNCTIONS
@@ -254,92 +313,127 @@ const fillRows = (row, tr) => {
   tr.appendChild(tdActions);
 }
 
+const searchData = () => {
+  const inputSearch = document.getElementById('input-search');
+  const buttonSubmit = document.getElementById('submit-search');
+
+  buttonSubmit.addEventListener('click', async () => {
+    const table = document.querySelector('.table__content');
+    table.innerHTML = '';
+
+    if (inputSearch.value.trim()) {
+      if (['entradas', 'saidas'].includes(inputSearch.value.trim().toLowerCase())) {
+        pagination.finance_type = inputSearch.value;
+        description.description = '';
+      } else {
+        pagination.description = inputSearch.value;
+        pagination.finance_type = '';
+      }
+    } else {
+      pagination.description = '';
+      pagination.finance_type = '';
+    }
+    pagination.page = 1;
+
+    await getFinances();
+    const paginationContainer = document.querySelector('.table--pagination');
+    paginationContainer.innerHTML = '';
+    fillPagination();
+  });
+}
+
 // PAGINATION
+const perPageItem = document.getElementById('pagination-range');
+
 const fillPagination = () => {
-  const paginationContainer = document.querySelector('.table--pagination');
+  if (pagination.total_pages >= 1) {
+    const paginationContainer = document.querySelector('.table--pagination');
 
-  const previeusButton = document.createElement('span');
-  previeusButton.innerHTML = '<i class="ph-bold ph-caret-left"></i>';
-  previeusButton.classList.add('table__pagination--previous');
+    const previeusButton = document.createElement('span');
+    previeusButton.innerHTML = '<i class="ph-bold ph-caret-left"></i>';
+    previeusButton.classList.add('table__pagination--previous');
 
-  const nextButton = document.createElement('span');
-  nextButton.innerHTML = '<i class="ph-bold ph-caret-right"></i>';
-  nextButton.classList.add('table__pagination--next');
+    const nextButton = document.createElement('span');
+    nextButton.innerHTML = '<i class="ph-bold ph-caret-right"></i>';
+    nextButton.classList.add('table__pagination--next');
 
-  const paginationItem = document.createElement('span');
-  paginationItem.classList.add('table__pagination--item');
+    const paginationItem = document.createElement('span');
+    paginationItem.classList.add('table__pagination--item');
 
-  for (let i = 1; i <= pagination.total_pages; i++) {
-    const item = paginationItem.cloneNode();
-    item.textContent = i;
-    item.setAttribute('data-page', i);
-    item.addEventListener('click', async (event) => {
+    for (let i = 1; i <= pagination.total_pages; i++) {
+      const item = paginationItem.cloneNode();
+      item.textContent = i;
+      item.setAttribute('data-page', i);
+      item.addEventListener('click', async (event) => {
+        const table = document.querySelector('.table__content');
+        table.innerHTML = '';
+        const page = event.target.getAttribute('data-page');
+        pagination.page = page;
+        await getFinances();
+
+        const items = document.querySelectorAll('.table__pagination--item');
+        items.forEach((item) => {
+          item.classList.remove('active');
+        });
+        event.target.classList.add('active');
+      });
+
+      if (i === 1) {
+        item.classList.add('active');
+      }
+
+      paginationContainer.appendChild(item);
+    }
+
+    previeusButton.addEventListener('click', async () => {
       const table = document.querySelector('.table__content');
       table.innerHTML = '';
-      const page = event.target.getAttribute('data-page');
-      pagination.page = page;
+      if (pagination.page > 1) {
+        pagination.page--;
+      }
       await getFinances();
 
       const items = document.querySelectorAll('.table__pagination--item');
       items.forEach((item) => {
         item.classList.remove('active');
       });
-      event.target.classList.add('active');
+      items[pagination.page - 1].classList.add('active');
     });
 
-    if (i === 1) {
-      item.classList.add('active');
-    }
+    nextButton.addEventListener('click', async () => {
+      const table = document.querySelector('.table__content');
+      table.innerHTML = '';
+      if (pagination.page < pagination.total_pages) {
+        pagination.page++;
+      }
+      await getFinances();
 
-    paginationContainer.appendChild(item);
+      const items = document.querySelectorAll('.table__pagination--item');
+      items.forEach((item) => {
+        item.classList.remove('active');
+      });
+      items[pagination.page - 1].classList.add('active');
+    });
+
+    paginationContainer.prepend(previeusButton);
+    paginationContainer.appendChild(nextButton);
+  } else {
+    perPageItem.style.display = 'none';
   }
-
-  previeusButton.addEventListener('click', async () => {
-    const table = document.querySelector('.table__content');
-    table.innerHTML = '';
-    if (pagination.page > 1) {
-      pagination.page--;
-    }
-    await getFinances();
-
-    const items = document.querySelectorAll('.table__pagination--item');
-    items.forEach((item) => {
-      item.classList.remove('active');
-    });
-    items[pagination.page - 1].classList.add('active');
-  });
-
-  nextButton.addEventListener('click', async () => {
-    const table = document.querySelector('.table__content');
-    table.innerHTML = '';
-    if (pagination.page < pagination.total_pages) {
-      pagination.page++;
-    }
-    await getFinances();
-
-    const items = document.querySelectorAll('.table__pagination--item');
-    items.forEach((item) => {
-      item.classList.remove('active');
-    });
-    items[pagination.page - 1].classList.add('active');
-  });
-
-  paginationContainer.prepend(previeusButton);
-  paginationContainer.appendChild(nextButton);
 }
 
-const handlePerPage = async (event) => {
-  const table = document.querySelector('.table__content');
-  table.innerHTML = '';
-  pagination.per_page = event.target.value;
-  await getFinances();
-  const paginationContainer = document.querySelector('.table--pagination');
-  paginationContainer.innerHTML = '';
-  fillPagination();
+const handlePerPage = async () => {
+  perPageItem.addEventListener('change', async (event) => {
+    const table = document.querySelector('.table__content');
+    table.innerHTML = '';
+    pagination.per_page = event.target.value;
+    pagination.page = 1;
+    await getFinances();
+    const paginationContainer = document.querySelector('.table--pagination');
+    paginationContainer.innerHTML = '';
+    fillPagination();
+  });
 }
-
-const perPageItem = document.getElementById('pagination-range');
-perPageItem.addEventListener('change', async (event) => handlePerPage(event));
 
 // MODAL FUNCTIONS
 const modalContent = document.getElementById('modal');
@@ -492,7 +586,11 @@ const initialize = () => {
     window.location.href = '../../../src/app/login.html';
   }
   fillRadioGroupCheck();
+  getProfile();
   getFinances();
+  searchData();
+  handlePerPage();
+  dropDownProfile();
   setTimeout(() => {
     fillPagination();
   }, 200);
