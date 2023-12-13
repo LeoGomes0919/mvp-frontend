@@ -211,6 +211,19 @@
 
 /* MAIN CONTENT PAGINATION STYLES */
 
+.table--pagination-container {
+  display: flex;
+  width: 100%;
+  flex-direction: row;
+  flex-wrap: nowrap;
+  align-items: baseline;
+  justify-content: space-between;
+}
+
+.input.pagination-range {
+  width: auto;
+}
+
 .table--pagination {
   display: flex;
   flex-direction: row;

@@ -36,7 +36,7 @@
             <i class="ph ph-arrow-circle-up card__header__title--icon-income"></i>
           </div>
           <div class="info__card--body">
-            <span class="card__body--value">R$ 17.000,00</span>
+            <span class="card__body--value" id="balance-income">R$ 17.000,00</span>
           </div>
         </div>
 
@@ -46,7 +46,7 @@
             <i class="ph ph-arrow-circle-down card__header__title--icon-outcome"></i>
           </div>
           <div class="info__card--body">
-            <span class="card__body--value">R$ 2.789,00</span>
+            <span class="card__body--value" id="balance-outcome">R$ 2.789,00</span>
           </div>
         </div>
 
@@ -56,7 +56,7 @@
             <i class="ph ph-currency-dollar card__header__title--icon-balance"></i>
           </div>
           <div class="info__card--body">
-            <span class="card__body--value">R$ 14.211,00</span>
+            <span class="card__body--value" id="balance-total">R$ 14.211,00</span>
           </div>
         </div>
       </div>
@@ -65,7 +65,7 @@
     <div class="main__content">
       <section class="main__content--info-table">
         <span class="info__table--title">Registros</span>
-        <span class="info__table--item-quantity">4 itens</span>
+        <span class="info__table--item-quantity"></span>
       </section>
 
       <section class="main__content--filter">
@@ -78,16 +78,14 @@
 
       <div class="main__content--table">
         <table class="table__content"></table>
-        <div class="table--pagination">
-          <span class="table__pagination--previous">
-            <i class="ph-bold ph-caret-left"></i>
-          </span>
-          <span class="table__pagination--item active">1</span>
-          <span class="table__pagination--item">2</span>
-          <span class="table__pagination--item">3</span>
-          <span class="table__pagination--next">
-            <i class="ph-bold ph-caret-right"></i>
-          </span>
+        <div class="table--pagination-container">
+          <select class="input input--success input--md pagination-range" name="pagination-range" id="pagination-range">
+            <option value="5">5</option>
+            <option value="10">10</option>
+            <option value="15">15</option>
+            <option value="20">20</option>
+          </select>
+          <div class="table--pagination"></div>
         </div>
       </div>
 

@@ -1,4 +1,4 @@
-// ACESSO AO BACKEND
+// BANCKEND ACCESS
 const token = localStorage.getItem('token') ?? null
 const baseUrl = 'http://127.0.0.1:5000';
 const headers = {
@@ -9,20 +9,31 @@ const headers = {
 
 let pagination = {
   page: 1,
-  limit: 10
+  per_page: 5,
+  total_pages: 0,
+  total_items: 0
+}
+
+let balance = {
+  income: 0,
+  outcome: 0,
+  total: 0
 }
 
 const getFinances = async () => {
-  const response = await fetch(`${baseUrl}/finances/filters`, {
+  const { page, per_page } = pagination;
+  const response = await fetch(`${baseUrl}/finances/filters?page=${page}&per_page=${per_page}`, {
     method: 'GET',
     headers
   });
 
   const data = await response.json();
-  console.log("🚀 ~ file: dashboard.js:16 ~ getFinances ~ data:", data)
 
   if (data?.status === 'success') {
-    const { items, pagination } = data?.data;
+    const { items, pagination: paginationData, balance: balanceData } = data?.data;
+    Object.assign(pagination, paginationData);
+    Object.assign(balance, balanceData);
+
     fillTable(items.map((item) => ({
       id: item.id,
       description: item.description,
@@ -36,7 +47,23 @@ const getFinances = async () => {
   }
 }
 
-const handleSubimitToBackend = async (data) => {
+const getFinanceById = async (id) => {
+  const response = await fetch(`${baseUrl}/finances/${id}`, {
+    method: 'GET',
+    headers
+  });
+
+  const data = await response.json();
+
+  if (data?.status === 'success') {
+    return data?.data;
+  } else {
+    alert(data?.data);
+  }
+
+}
+
+const handleSave = async (data) => {
   const response = await fetch(`${baseUrl}/finances/`, {
     method: 'POST',
     headers,
@@ -94,13 +121,24 @@ const fillTable = (data) => {
     fillRows(row, tr);
 
     table.appendChild(tr);
-  })
+  });
+
+  const tableInfoQuantity = document.querySelector('.info__table--item-quantity');
+  tableInfoQuantity.textContent = pagination.total_items + ' item(s)';
+
+  const balanceIncome = document.getElementById('balance-income');
+  const balanceOutcome = document.getElementById('balance-outcome');
+  const balanceTotal = document.getElementById('balance-total');
+
+  balanceIncome.textContent = new Intl.NumberFormat('pt-BR', { style: 'currency', currency: 'BRL' }).format(balance.income);
+  balanceOutcome.textContent = new Intl.NumberFormat('pt-BR', { style: 'currency', currency: 'BRL' }).format(balance.outcome);
+  balanceTotal.textContent = new Intl.NumberFormat('pt-BR', { style: 'currency', currency: 'BRL' }).format(balance.total);
 }
 
 const fillRows = (row, tr) => {
   for (const key in row) {
     const td = document.createElement('td');
-    if (row.hasOwnProperty(key) && key !== 'id') {
+    if (row.hasOwnProperty(key) && !['id', 'type'].includes(key)) {
       switch (key) {
         case 'description':
           td.textContent = row[key];
@@ -182,8 +220,33 @@ const fillRows = (row, tr) => {
     await handleDelete(row.id);
   });
 
-  editButton.addEventListener('click', () => {
-    alert(`Editar linha com ID: ${row.id}`);
+  editButton.addEventListener('click', async () => {
+    isUpdate = true;
+    const response = await getFinanceById(row.id);
+    openModal();
+    const form = document.querySelector('.model__content__main--form');
+    const inputs = form.querySelectorAll('input');
+
+    const idInput = document.createElement('input');
+    idInput.setAttribute('type', 'hidden');
+    idInput.setAttribute('name', 'id');
+    idInput.setAttribute('value', response.id);
+    form.appendChild(idInput);
+
+    for (const input of inputs) {
+      if (input.id === 'category') {
+        input.value = response.category.name;
+      } else if (input.type === 'radio') {
+        if (input.getAttribute('id') === response.finance_type) {
+          input.value = response.finance_type;
+          input.checked = true;
+          input.parentElement.classList.add('active');
+          input.value = response.finance_type;
+        }
+      } else {
+        input.value = response[input.name];
+      }
+    }
   });
 
   tdActions.appendChild(deleteButton);
@@ -191,20 +254,116 @@ const fillRows = (row, tr) => {
   tr.appendChild(tdActions);
 }
 
+// PAGINATION
+const fillPagination = () => {
+  const paginationContainer = document.querySelector('.table--pagination');
+
+  const previeusButton = document.createElement('span');
+  previeusButton.innerHTML = '<i class="ph-bold ph-caret-left"></i>';
+  previeusButton.classList.add('table__pagination--previous');
+
+  const nextButton = document.createElement('span');
+  nextButton.innerHTML = '<i class="ph-bold ph-caret-right"></i>';
+  nextButton.classList.add('table__pagination--next');
+
+  const paginationItem = document.createElement('span');
+  paginationItem.classList.add('table__pagination--item');
+
+  for (let i = 1; i <= pagination.total_pages; i++) {
+    const item = paginationItem.cloneNode();
+    item.textContent = i;
+    item.setAttribute('data-page', i);
+    item.addEventListener('click', async (event) => {
+      const table = document.querySelector('.table__content');
+      table.innerHTML = '';
+      const page = event.target.getAttribute('data-page');
+      pagination.page = page;
+      await getFinances();
+
+      const items = document.querySelectorAll('.table__pagination--item');
+      items.forEach((item) => {
+        item.classList.remove('active');
+      });
+      event.target.classList.add('active');
+    });
+
+    if (i === 1) {
+      item.classList.add('active');
+    }
+
+    paginationContainer.appendChild(item);
+  }
+
+  previeusButton.addEventListener('click', async () => {
+    const table = document.querySelector('.table__content');
+    table.innerHTML = '';
+    if (pagination.page > 1) {
+      pagination.page--;
+    }
+    await getFinances();
+
+    const items = document.querySelectorAll('.table__pagination--item');
+    items.forEach((item) => {
+      item.classList.remove('active');
+    });
+    items[pagination.page - 1].classList.add('active');
+  });
+
+  nextButton.addEventListener('click', async () => {
+    const table = document.querySelector('.table__content');
+    table.innerHTML = '';
+    if (pagination.page < pagination.total_pages) {
+      pagination.page++;
+    }
+    await getFinances();
+
+    const items = document.querySelectorAll('.table__pagination--item');
+    items.forEach((item) => {
+      item.classList.remove('active');
+    });
+    items[pagination.page - 1].classList.add('active');
+  });
+
+  paginationContainer.prepend(previeusButton);
+  paginationContainer.appendChild(nextButton);
+}
+
+const handlePerPage = async (event) => {
+  const table = document.querySelector('.table__content');
+  table.innerHTML = '';
+  pagination.per_page = event.target.value;
+  await getFinances();
+  const paginationContainer = document.querySelector('.table--pagination');
+  paginationContainer.innerHTML = '';
+  fillPagination();
+}
+
+const perPageItem = document.getElementById('pagination-range');
+perPageItem.addEventListener('change', async (event) => handlePerPage(event));
+
 // MODAL FUNCTIONS
 const modalContent = document.getElementById('modal');
-
-const btnOpenModal = document.getElementById('btn-open-modal');
 const openModal = () => {
   modalContent.style.display = 'flex';
   document.body.style.overflow = 'hidden';
 }
 
+const btnOpenModal = document.getElementById('btn-open-modal');
 btnOpenModal.addEventListener('click', () => openModal());
+
 const btnCloseModal = document.getElementById('btn-close-modal');
 btnCloseModal.addEventListener('click', () => {
+  const form = document.querySelector('.model__content__main--form');
+  if (form.querySelector('input[name="id"]')) {
+    form.removeChild(form.querySelector('input[name="id"]'));
+  }
+
   modal.style.animation = 'modalFadeOut 0.3s ease-in';
   document.body.style.overflow = 'auto';
+
+  form.reset();
+  fillRadioGroupCheck();
+
   setTimeout(() => {
     modal.style.display = 'none';
     modal.style.animation = '';
@@ -217,9 +376,10 @@ const fillRadioGroupCheck = () => {
   const containerRadio = document.querySelectorAll('.radio__buttons--item');
 
   radios.forEach((radio) => {
+    radio.parentElement.classList.remove('active');
     radio.addEventListener('change', () => {
       containerRadio.forEach((container) => {
-        if (radio.checked && container.getAttribute('data-value') === radio.value) {
+        if (radio.checked && container.getAttribute('data-value') === radio.id) {
           container.classList.add('active');
         } else {
           container.classList.remove('active');
@@ -284,40 +444,42 @@ const formValidation = () => {
 }
 
 const submitForm = async (event, form) => {
+  event.preventDefault();
   const containerRadio = document.querySelectorAll('.radio__buttons--item');
   const data = new FormData(form);
   const dataObject = Object.fromEntries(data.entries());
 
   Object.assign(dataObject, {
     value: Number(dataObject.value),
-    category_id: dataObject.category,
     finance_type: dataObject.type
   });
-  delete dataObject.category;
+
   delete dataObject.type;
 
-  await handleSubimitToBackend(dataObject);
+  const inputId = form.querySelector('input[name="id"]');
+  if (inputId && inputId.value) {
+    await handleEdit(inputId.value, dataObject);
+  } else {
+    await handleSave(dataObject);
+  }
 
   form.reset();
-  event.preventDefault();
   containerRadio.forEach((container) => {
     container.classList.remove('active');
   });
 }
 
-const handleSubmit = () => {
-  const buttonSubmit = document.getElementById('submit-form');
+const handleSubmit = (event) => {
   const form = document.querySelector('.model__content__main--form');
-
-  buttonSubmit.addEventListener('click', (event) => {
-    const hasError = formValidation();
-    if (hasError) {
-      event.preventDefault();
-    } else {
-      submitForm(event, form);
-    }
-  });
+  const hasError = formValidation();
+  if (hasError) {
+    event.preventDefault();
+  } else {
+    submitForm(event, form);
+  }
 }
+const buttonSubmit = document.getElementById('submit-form');
+buttonSubmit.addEventListener('click', (event) => handleSubmit(event));
 
 // UTILS FUNCTIONS
 const isEmpty = (value) => {
@@ -330,8 +492,10 @@ const initialize = () => {
     window.location.href = '../../../src/app/login.html';
   }
   fillRadioGroupCheck();
-  handleSubmit();
   getFinances();
+  setTimeout(() => {
+    fillPagination();
+  }, 200);
 }
 
 document.addEventListener('DOMContentLoaded', initialize);
