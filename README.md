@@ -35,9 +35,9 @@ Open the `src/app/login.html` file in your browser, or if you are using vscode, 
 
 ## Application Features
 
-### 1. Register and Login
+### 1. Login
 
-- Register, log in and start using
+- Log in and start using
 
 ### 2. View Transactions
 
